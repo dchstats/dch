@@ -1,0 +1,176 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	font: inherit;
+}
+
+
+
+html {
+	font-size: 16px;
+}
+
+body {
+	font-size: 1rem;
+	 font-family: 'Muli', sans-serif;
+}
+
+
+
+a {
+	text-decoration: none;
+}
+
+header {
+	height: 50px;
+	padding: 0 10px;
+	/* box-shadow: 0px 4px 8px 2px rgba(0,0,0,0.5); */
+	margin-bottom:10px;
+}
+
+.large {
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch;
+}
+
+.title {
+	justify-content: flex-start;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	font-size: 1.5rem;
+}
+
+.menu {
+	display: flex;
+	align-items: center;
+}
+
+.icon {
+	width: 25px;
+	height: 25px;
+	margin: 0 10px;
+}
+
+.menu a {
+	margin: 0 0.5rem;
+	padding: 0 0.5rem;
+	font-size: 1.2rem;
+	color: #666;
+	border-bottom: 2px solid transparent;
+}
+
+.large a:hover {
+	border-bottom-color: #666;
+}
+
+.small{
+	display:none;
+}
+
+.small .title {
+	height:100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.small-menu {
+	width: 150px;
+	height: 400px;
+	padding-right:1rem;
+	position: fixed;
+	/* top:50px; */
+	right: 0px;
+	background: white;
+	display: flex;
+	flex-direction: column;
+
+	font-size:1.2rem;
+	z-index: 100;
+}
+
+
+.small-menu > a {
+	padding: 10px 0px;
+	border-top: 1px solid lightgrey;
+	
+}
+
+input,
+select,
+textarea {
+	height: 30px;
+	border: 0.5px solid lightgrey;
+	margin: 2px;
+	padding: 5px 10px;
+	/* border-radius: 3px; */
+}
+
+
+
+
+
+button {
+	min-width: 4rem;
+	min-height:2rem;
+	margin:5px;
+	padding:5px;
+    cursor:pointer;
+    font-size:1rem;
+  	background: rgb(100, 100, 235);
+    color:white;
+    border:1px solid transparent;
+    border-radius:3px;
+    box-shadow:3px 3px 5px 0px rgba(0,0,0,0.2);  
+}
+
+button:hover{
+    background:white;
+	color:deepskyblue;
+	border-color:deepskyblue;
+    
+}
+
+button:focus{
+	outline:none;
+}
+
+button:active{
+	transform:scale(0.9);
+}
+
+button:disabled{
+    background:lightgrey;
+    color:white;
+    border-color:lightgrey;
+}
+
+
+
+input:disabled,
+select:disabled,
+textarea:disabled,
+button:disabled,
+button:disabled:hover {
+	background: lightgrey;
+	color: grey;
+}
+
+.hide{
+	display:none;
+}
+
+/* //////////////////////////////////////////////////////////// */
+@media(max-width:768px){
+	.large{
+		display:none;
+	}
+
+	.small{
+		display:block;
+	}
+}

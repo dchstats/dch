@@ -1,0 +1,293 @@
+.leg {
+	display: flex;
+	color: white;
+	justify-content: center;
+	align-items: center;
+}
+
+.leg div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 33%;
+	padding: 5px;
+}
+
+.card{
+	width: 14vw;
+	height: 9vw;
+	margin: 2px;
+	padding:2px;
+	border-radius:3px;
+	overflow:hidden;
+}
+
+/* SILO SECTION  ///////////////////////////////// */
+.silo{
+	display:flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: stretch;
+	background:lightgoldenrodyellow;
+	color:purple;
+
+}
+
+.silo-name {
+	font-size:20px;
+}
+
+
+
+.rake-incrementer{
+	display:flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.rake-incrementer span{
+	font-size:70px;
+}
+
+.silo-remark {
+	width:100%;
+}
+
+.silo-remark input{
+	display:inline-block;
+	width:200px;
+}
+
+/* ///////////////////////////////// */
+
+
+/* DUMPER  ///////////////////////////////// */
+
+.live-dumper{
+	display:flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: stretch;
+	background:lightgoldenrodyellow;
+	color:purple;
+	font-weight: bold;
+}
+
+.dumper-counter{
+	font-size:24px;
+}
+
+
+/* ///////////////////////////////// */
+.live-section{
+	background: rgb(47, 47, 47);
+}
+
+.live-sub{
+	display: flex;
+	flex-direction: row;
+	flex-wrap:wrap;
+	justify-content: center;
+	align-items: center;
+	padding:20px 0;
+
+}
+
+.type {
+	padding: 1vw 0.5vw;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.machine {
+	perspective: 5000px;
+	perspective: 50000px;
+	color: white;
+}
+
+.inner {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	transition: transform 0.2s;
+	transform-style: preserve-3d;
+}
+
+.front,
+.back {
+	border-radius: 5px;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
+	backface-visibility: hidden;
+	padding: 5%;
+}
+
+.back {
+	transform: rotateY(180deg);
+	background: white;
+	color: black;
+}
+
+.back * {
+	width: 100%;
+}
+
+.machine-title {
+	font-size: 100%;
+}
+
+.machine-remark {
+	font-size: 70%;
+}
+
+.machine-title-back {
+	font-size: 80%;
+}
+
+@media (min-width: 168px) {
+	.machine:hover .inner {
+		transform: rotateY(180deg);
+	}
+}
+
+/* \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
+
+.trend-section {
+	width: 100vw;
+	padding: 20px 0;
+	background: rgb(47, 47, 47);
+}
+
+.trend-row {
+	width: 96%;
+	height: 30px;
+	display: flex;
+	color: white;
+	margin: 30px 0;
+}
+
+.mcname {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	min-width: 100px;
+}
+
+.mctrend {
+	display: flex;
+	flex-grow: 1;
+	border: 1px solid rgb(188, 188, 188, 0.2);
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.trend-block {
+	height: 100%;
+	flex-grow: 1;
+}
+
+.Idle-block {
+	background: rgb(51, 87, 83);
+
+}
+
+.Running-block {
+	background: rgb(0, 225, 50);
+	
+}
+
+.BreakDown-block {
+	background: rgb(255, 0, 60);
+	
+}
+
+.Undef-block {
+	background: rgba(163, 163, 163, 0);
+}
+
+
+
+
+/* /////////////////////////////////////////////////////// */
+
+.perf-section {
+	width: 100vw;
+	padding: 20px 0;
+	background: rgb(47, 47, 47);
+	color: white;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.perf-mach {
+	width: 400px;
+	height: 250px;
+	margin: 10px;
+	display: grid;
+	grid-template-rows: 1fr auto;
+	grid-template-columns: 2fr 3fr;
+	border: 1px solid grey;
+}
+
+.perf-mcname {
+	grid-row: 1;
+	grid-column: 1/-1;
+	background: rgb(84, 84, 84);
+}
+
+.perf-mach div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+}
+
+.perf-section td {
+	border: 1px solid grey;
+	padding: 10px;
+}
+
+/* .perf-section .machine{
+	display:flex;
+} */
+
+table {
+	border-collapse: collapse;
+}
+
+.mcperf {
+	padding: 10px;
+}
+
+/* ///////////////////////////////////////////////////////////// */
+
+@media (max-width: 992px) {
+	.card {
+		width: 30vw;
+		height: 20vw;
+		margin: 0.5vw;
+	}
+}
+
+.Idle {
+	background: rgb(100,100,100);
+}
+
+.Running {
+	background: rgb(0, 225, 50);
+}
+
+.BreakDown {
+	background: rgb(255, 0, 60);
+}
+
+.Undef {
+	background: rgba(163, 163, 163, 0);
+}

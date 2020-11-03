@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Dudhichua Project">
+  <meta name="keywords"
+    content="Dudhichua, Dudhichua Project, Live status, Shift report, Daily report, Production report, Dispatch report">
+  <meta name="author" content="Sushant Tiwari">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>dch</title>
+  <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+  <script src="libs/angular.js"></script>
+  <script src="libs/jquery.js"></script>
+
+  <script src="dist/Chart.js"></script>
+  <script src="js/navigation.js" defer></script>
+  <script src="js/live.js" defer></script>
+
+  <link rel="stylesheet" href="css/live.css" />
+  <link rel="stylesheet" href="css/common-styles.css" />
+
+
+</head>
+
+<body ng-app="myApp" ng-controller="myController">
+  <header class="large">
+    <div class="title">
+      <img class="icon" src="media/favicon.svg" alt="">
+      <p>DCH</p>
+    </div>
+    <div class="menu">
+      <a href="index.html">Live</a>
+      <a href="shift.html">Shift</a>
+      <a href="day.html">Day</a>
+    </div>
+  </header>
+
+  <header class="small">
+    <div class="title">
+      <img class="icon" src="media/favicon.svg" alt="">
+      <p>Dudhichua Live</p>
+      <p class="menu-icon">&#9776</p>
+    </div>
+
+  </header>
+
+  <div class="small-menu hide">
+    <a href="index.html">Live</a>
+    <a href="shift.html">Shift</a>
+    <a href="day.html">Day</a>
+  </div>
+
+
+  <!-- <div class="leg">
+    <div class="idl {{ statusStrings[0] }}">{{ statusStrings[0] }}</div>
+    <div class="run {{ statusStrings[1] }}">{{ statusStrings[1] }}</div>
+    <div class="brk {{ statusStrings[2] }}">{{ statusStrings[2] }}</div>
+  </div> -->
+
+  <!-- /////////////////////////////////////////////////////////// -->
+
+  <div class="live-section">
+
+    <div class="live-sub">
+      <div class="machine card" ng-repeat="x in machines" ng-hide="x.type!='crusher'">
+        <div class="inner">
+          <div class="front {{ statusStrings[x.status] }}">
+            <p class="machine-title">{{ x.name }}</p>
+            <p class="machine-remark">{{ x.remark }}</p>
+          </div>
+
+          <div class="back">
+            <p class="machine-title-back">{{ x.name }}</p>
+            <select ng-model="x.status" ng-change="update()"
+              ng-options="statusStrings[s] for s in statusCodes"></select>
+            <input class="back-remark" ng-model="x.remark" ng-change="update()" placeholder="Remark" type="text" />
+          </div>
+        </div>
+      </div>
+
+      <div class="silo card" ng-repeat="silo in silos">
+        <p clas="silo-name"> {{silo.name}}</p>
+        <div class="rake-incrementer">
+          <button ng-click="silo.rakes=silo.rakes-1; update()">-</button>
+          <span>{{silo.rakes}}</span>
+          <button ng-click="silo.rakes=silo.rakes+1; update()">+</button>
+        </div>
+        <div class="silo-remark">
+          <input type="text" ng-model="silo.remark" ng-change="update()">
+        </div>
+      </div>
+
+
+
+    </div>
+
+    <div class="live-sub">
+      <div class="machine card" ng-repeat="x in machines" ng-hide="x.type!='shovel'">
+        <div class="inner">
+          <div class="front {{ statusStrings[x.status] }}">
+            <p class="machine-title">{{ x.name }}</p>
+            <p class="machine-remark">{{ x.remark }}</p>
+          </div>
+
+          <div class="back">
+            <p class="machine-title-back">{{ x.name }}</p>
+            <select ng-model="x.status" ng-change="update()"
+              ng-options="statusStrings[s] for s in statusCodes"></select>
+            <input class="back-remark" ng-model="x.remark" ng-change="update()" placeholder="Remark" type="text" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="live-sub">
+      <div class="machine card" ng-repeat="x in machines" ng-hide="x.type!='dragline'">
+        <div class="inner">
+          <div class="front {{ statusStrings[x.status] }}">
+            <p class="machine-title">{{ x.name }}</p>
+            <p class="machine-remark">{{ x.remark }}</p>
+          </div>
+
+          <div class="back">
+            <p class="machine-title-back">{{ x.name }}</p>
+            <select ng-model="x.status" ng-change="update()"
+              ng-options="statusStrings[s] for s in statusCodes"></select>
+            <input class="back-remark" ng-model="x.remark" ng-change="update()" placeholder="Remark" type="text" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card live-dumper">
+        <p>EAST DUMPERS</p>
+        <table>
+          <tr>
+            <td>Avl</td>
+            <td> <button ng-click="dumperCounter(1)">-</button></td>
+            <td class="dumper-counter">{{dumper.east_avl}}</td>
+            <td><button ng-click="dumperCounter(2)">+</button></td>
+          </tr>
+          <tr>
+            <td>Run</td>
+            <td><button ng-click="dumperCounter(3)">-</button></td>
+            <td class="dumper-counter">{{dumper.east_run}}</td>
+            <td><button ng-click="dumperCounter(4)">+</button></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card live-dumper">
+        <p>WEST DUMPERS</p>
+        <table>
+          <tr>
+            <td>Avl</td>
+            <td> <button ng-click="dumperCounter(5)">-</button></td>
+            <td class="dumper-counter">{{dumper.west_avl}}</td>
+            <td><button ng-click="dumperCounter(6)">+</button></td>
+          </tr>
+          <tr>
+            <td>Run</td>
+            <td><button ng-click="dumperCounter(7)">-</button></td>
+            <td class="dumper-counter">{{dumper.west_run}}</td>
+            <td><button ng-click="dumperCounter(8)">+</button></td>
+          </tr>
+        </table>
+      </div>
+
+
+
+    </div>
+  </div>
+
+  <div class="trend-section">
+    <div class="trend-row" ng-repeat="x in machines">
+      <div class="mcname">
+        {{x.name}}
+      </div>
+      <div class="mctrend">
+        <div ng-repeat="y in x.logs track by $index" class="trend-block {{statusStrings[y]}}-block"
+          ng-click=" y=y+1; y=y%3; x.logs[$index]=y; update()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="perf-section">
+    <div ng-repeat="mach in machines" class="perf-mach">
+      <div class="perf-mcname">
+        <p>{{mach.name}}</p>
+      </div>
+      <div>
+        <table class="inner-perf-table">
+          <tr>
+            <td> Idle</td>
+            <td>{{mach.idlhms}}</td>
+          </tr>
+          <tr>
+            <td> Rung</td>
+            <td>{{mach.runhms}}</td>
+          </tr>
+          <tr>
+            <td> Brdn</td>
+            <td>{{mach.brkhms}}</td>
+          </tr>
+          <tr>
+            <td> Avlb</td>
+            <td>{{mach.avlhms}}</td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <table class="inner-perf-table">
+          <tr>
+            <td>Availability</td>
+            <td>{{mach.avlstr}}</td>
+          </tr>
+          <tr>
+            <td>Utilization</td>
+            <td>{{mach.utlstr}}</td>
+          </tr>
+        </table>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+  <!-- <style>
+  .mctrend div:nth-child( {        {        min+1      }    }  ) {
+    border-radius: 0 50% 50% 0;
+  }
+</style> -->
+
+
+</body>
+
+</html>
