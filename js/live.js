@@ -14,6 +14,8 @@ app.controller("myController", function ($scope, $http) {
     $scope.statusStrings = ['Idle', 'Running', 'BreakDown', 'Undef'];
 
 
+
+
     $scope.dumplogs = [];
 
 
@@ -40,17 +42,23 @@ app.controller("myController", function ($scope, $http) {
     class Machine {
         constructor(name, type) {
             this.name = name;
-            this.type = type;
-            this.status = 0;
+            this.type = type;         // shovel, crusher, silo, dragline
+            this.status = 0;          // 0 -> idle, 1-> run, 2-> bd, 3-> undef.
             this.remark = "";
-            this.logs = [];
-            this.idlmins = 0;
-            this.runmins = 0;
-            this.brkmins = 0;
-            this.avlmins = 0;
-            this.defmins = 0;
-            this.avl = 0;
-            this.utl = 0;
+            this.logs = [];           // logs status every 5 mins
+            this.idlmins = 0;         // total idle minutes in the present shift
+            this.runmins = 0;         // total running minutes
+            this.brkmins = 0;         // breakdown minutes
+            this.avlmins = 0;         // available minutes
+            this.defmins = 0;         // minutes for which valid status is avilable for calculation
+            this.avl = 0;             // availibility as percentage number rounded to nearest integer
+            this.utl = 0;             // utilization as number
+            this.idlhms = "";         // idle time in hh:mm format.
+            this.runhms = "";         // running time in hh:mm format
+            this.brkhms = "";         // brekdown in hh:mm format.
+            this.avlhms = "";         // available time in hh:mm format.
+            this.avlstr = "";         // avilibility as percentabe in string format for display.
+            this.utlstr = "";         // utilization as percentage in string format.
 
         }
     }
@@ -237,6 +245,27 @@ app.controller("myController", function ($scope, $http) {
         })
     }
     function performanceLog() {
+        $scope.crusherTotal = {
+            idlmins:0,
+            runmins:0,
+            brkmins:0,
+            avlmins:0,
+            defmins:0
+        };
+        $scope.shovelTotal = {
+            idlmins:0,
+            runmins:0,
+            brkmins:0,
+            avlmins:0,
+            defmins:0
+        };
+        $scope.draglineTotal = {
+            idlmins:0,
+            runmins:0,
+            brkmins:0,
+            avlmins:0,
+            defmins:0
+        };
 
         interpolate(); // Will ensure data validity and continuity before logging.
         angular.forEach($scope.machines, function (mach, i) {
@@ -273,7 +302,73 @@ app.controller("myController", function ($scope, $http) {
 
             mach.avlstr = `${mach.avl} %`;
             mach.utlstr = `${mach.utl} %`;
+
             $scope.changed = true;
+
+
+            ////// TOTALING CALCULATIONS /////////
+      
+
+            if (mach.type == 'crusher') {
+                $scope.crusherTotal.idlmins += mach.idlmins;
+                $scope.crusherTotal.runmins += mach.runmins;
+                $scope.crusherTotal.brkmins += mach.brkmins;
+                $scope.crusherTotal.avlmins += mach.avlmins;
+                $scope.crusherTotal.defmins += mach.defmins;
+
+                $scope.crusherTotal.avl = Math.round($scope.crusherTotal.avlmins * 100 / $scope.crusherTotal.defmins);
+                $scope.crusherTotal.utl = Math.round($scope.crusherTotal.runmins * 100 / $scope.crusherTotal.defmins);
+
+                $scope.crusherTotal.idlhms = tohhmm($scope.crusherTotal.idlmins);
+                $scope.crusherTotal.runhms = tohhmm($scope.crusherTotal.runmins);
+                $scope.crusherTotal.brkhms = tohhmm($scope.crusherTotal.brkmins);
+                $scope.crusherTotal.avlhms = tohhmm($scope.crusherTotal.avlmins);
+
+                $scope.crusherTotal.avlstr = `${$scope.crusherTotal.avl} %`;
+                $scope.crusherTotal.utlstr = `${$scope.crusherTotal.utl} %`;
+            }
+
+            else if (mach.type == 'shovel') {
+                $scope.shovelTotal.idlmins += mach.idlmins;
+                $scope.shovelTotal.runmins += mach.runmins;
+                $scope.shovelTotal.brkmins += mach.brkmins;
+                $scope.shovelTotal.avlmins += mach.avlmins;
+                $scope.shovelTotal.defmins += mach.defmins;
+
+                $scope.shovelTotal.avl = Math.round($scope.shovelTotal.avlmins * 100 / $scope.shovelTotal.defmins);
+                $scope.shovelTotal.utl = Math.round($scope.shovelTotal.runmins * 100 / $scope.shovelTotal.defmins);
+
+                $scope.shovelTotal.idlhms = tohhmm($scope.shovelTotal.idlmins);
+                $scope.shovelTotal.runhms = tohhmm($scope.shovelTotal.runmins);
+                $scope.shovelTotal.brkhms = tohhmm($scope.shovelTotal.brkmins);
+                $scope.shovelTotal.avlhms = tohhmm($scope.shovelTotal.avlmins);
+
+                $scope.shovelTotal.avlstr = `${$scope.shovelTotal.avl} %`;
+                $scope.shovelTotal.utlstr = `${$scope.shovelTotal.utl} %`;
+            }
+
+            else if (mach.type == 'dragline') {
+                $scope.draglineTotal.idlmins += mach.idlmins;
+                $scope.draglineTotal.runmins += mach.runmins;
+                $scope.draglineTotal.brkmins += mach.brkmins;
+                $scope.draglineTotal.avlmins += mach.avlmins;
+                $scope.draglineTotal.defmins += mach.defmins;
+
+                $scope.draglineTotal.avl = Math.round($scope.draglineTotal.avlmins * 100 / $scope.draglineTotal.defmins);
+                $scope.draglineTotal.utl = Math.round($scope.draglineTotal.runmins * 100 / $scope.draglineTotal.defmins);
+
+                $scope.draglineTotal.idlhms = tohhmm($scope.draglineTotal.idlmins);
+                $scope.draglineTotal.runhms = tohhmm($scope.draglineTotal.runmins);
+                $scope.draglineTotal.brkhms = tohhmm($scope.draglineTotal.brkmins);
+                $scope.draglineTotal.avlhms = tohhmm($scope.draglineTotal.avlmins);
+
+                $scope.draglineTotal.avlstr = `${$scope.draglineTotal.avl} %`;
+                $scope.draglineTotal.utlstr = `${$scope.draglineTotal.utl} %`;
+            }
+            
+            console.log($scope.shovelTotal);
+
+           
         })
     }
 

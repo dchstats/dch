@@ -20,6 +20,7 @@
 
   <link rel="stylesheet" href="css/live.css" />
   <link rel="stylesheet" href="css/common-styles.css" />
+  <link rel="stylesheet" href="libs/w3.css">
 
 
 </head>
@@ -30,6 +31,7 @@
       <img class="icon" src="media/favicon.svg" alt="">
       <p>DCH</p>
     </div>
+    
     <div class="menu">
       <a href="index.html">Live</a>
       <a href="shift.html">Shift</a>
@@ -188,8 +190,43 @@
     </div>
   </div>
 
+  <div class="table-section">
+    <div class="shovel-perf-div">
+      <table class="shovel-perf-table w3-table-all">
+        <tr class="w3-green">
+          <th>Shovel</th>
+          <th>Avl hrs</th>
+          <th>Idl hrs</th>
+          <th>Run hrs</th>
+          <th>Bdn hrs</th>
+          <th>% Avl</th>
+          <th>% Utl</th>
+        </tr>
+        <tr ng-repeat="s in machines" ng-hide="s.type!='shovel'">
+
+          <td>{{s.name}}</td>
+          <td>{{s.avlhms}}</td>
+          <td>{{s.idlhms}}</td>
+          <td>{{s.runhms}}</td>
+          <td>{{s.brkhms}}</td>
+          <td>{{s.avlstr}}</td>
+          <td>{{s.utlstr}}</td>
+        </tr>
+        <tr class="total w3-green">
+          <td>TOTAL</td>
+          <td>{{shovelTotal.avlhms}}</td>
+          <td>{{shovelTotal.idlhms}}</td>
+          <td>{{shovelTotal.runhms}}</td>
+          <td>{{shovelTotal.brkhms}}</td>
+          <td>{{shovelTotal.avlstr}}</td>
+          <td>{{shovelTotal.utlstr}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
   <div class="perf-section">
-    <div ng-repeat="mach in machines" class="perf-mach">
+    <div ng-repeat="mach in machines" class="perf-mach" ng-hide="mach.type=='shovel'">
       <div class="perf-mcname">
         <p>{{mach.name}}</p>
       </div>

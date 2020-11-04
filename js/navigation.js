@@ -1,8 +1,8 @@
 $(document).ready(begin());
 
 function begin() {
-    $(".head").addClass("w3-teal").addClass("w3-border-0");
-    $(".unit").addClass("w3-teal").addClass("w3-small")
+    // $(".head").addClass("w3-teal").addClass("w3-border-0");
+    // $(".unit").addClass("w3-teal").addClass("w3-small")
     $(".section").hide();
 }
 
