@@ -7,22 +7,22 @@ app.controller("myController", function ($scope, $http) {
         'P&H-16', 'P&H-17', 'P&H-18', 'P&H-19', 'HIM-20', 'PC-TATA', 'PL-06', 'PL-07', 'SM-L&T'];
     $scope.draglines = ['Jyoti', 'Pawan', 'Vindhya', 'Jwala'];
     $scope.siloNames = ['OLD SILO', 'NEW SILO', 'WHARF WALL'];
-    $scope.silos = [];
-    $scope.machines = [];
+    $scope.dumperNames = ['EAST', 'WEST'];
+
     $scope.types = ['silo', 'crusher', 'shovel', 'dragline'];
     $scope.statusCodes = [0, 1, 2];
     $scope.statusStrings = ['Idle', 'Running', 'BreakDown', 'Undef'];
 
 
+    $scope.machines = [];
+    $scope.silos = [];
 
-
-    $scope.dumplogs = [];
 
 
 
     $scope.time = new Date().getTime();
     $scope.stamp = ""  // time of fetched status
-    $scope.changed = false;
+
     $scope.pin = "";
     $scope.auth = false;
     $scope.user = "Guest";
@@ -31,34 +31,37 @@ app.controller("myController", function ($scope, $http) {
     $scope.downUrl = 'https://sushanttiwari.in/serv/downLive.php';
     $scope.upUrl = 'serv/upLive.php';
     $scope.downUrl = 'serv/downLive.php';
-    $scope.min = 0;
+
+    $scope.min = 0;   // minutes since shift
+    $scope.block = 0;
+    $scope.hour = 0;
     $scope.uploader = true;
 
 
     // CONFIGS ////////
-    forceUpload = false;
+    $scope.changed = false;
     ///////////////////
 
     class Machine {
         constructor(name, type) {
             this.name = name;
-            this.type = type;         // shovel, crusher, silo, dragline
-            this.status = 0;          // 0 -> idle, 1-> run, 2-> bd, 3-> undef.
+            this.type = type;
+            this.status = 0;
             this.remark = "";
-            this.logs = [];           // logs status every 5 mins
-            this.idlmins = 0;         // total idle minutes in the present shift
-            this.runmins = 0;         // total running minutes
-            this.brkmins = 0;         // breakdown minutes
-            this.avlmins = 0;         // available minutes
-            this.defmins = 0;         // minutes for which valid status is avilable for calculation
-            this.avl = 0;             // availibility as percentage number rounded to nearest integer
-            this.utl = 0;             // utilization as number
-            this.idlhms = "";         // idle time in hh:mm format.
-            this.runhms = "";         // running time in hh:mm format
-            this.brkhms = "";         // brekdown in hh:mm format.
-            this.avlhms = "";         // available time in hh:mm format.
-            this.avlstr = "";         // avilibility as percentabe in string format for display.
-            this.utlstr = "";         // utilization as percentage in string format.
+            this.logs = [];
+            this.idlmins = 0;
+            this.runmins = 0;
+            this.brkmins = 0;
+            this.avlmins = 0;
+            this.defmins = 0;
+            this.avl = 0;
+            this.utl = 0;
+            this.idlhms = "";
+            this.runhms = "";
+            this.brkhms = "";
+            this.avlhms = "";
+            this.avlstr = "";
+            this.utlstr = "";
 
         }
     }
@@ -72,27 +75,48 @@ app.controller("myController", function ($scope, $http) {
     }
 
     class Dumper {
-        constructor() {
-            this.east_total = 37;
-            this.east_avl = 10;
-            this.east_run = 0;
-
-            this.west_total = 39;
-            this.west_avl = 0;
-            this.west_run = 0;
+        constructor(name, total) {
+            this.name = name;
+            this.total = total;
+            this.avl = 0;
+            this.run = 0;
+            this.logs = [];
         }
 
+
         calculate() {
-            this.east_idl = this.east_avl - this.east_run;
-            this.east_brk = this.east_total - this.east_avl;
-            this.east_avali = Math.round(this.east_avl * 100 / this.east_total);
-            this.east_utl = Math.round(this.east_run * 100 / this.east_total);
+            this.idl = this.avl - this.run;
+            this.brk = this.total - this.avl;
+            this.avali = Math.round(this.avl * 100 / this.total);
+            this.utli = Math.round(this.run * 100 / this.total);
+        }
 
+        log() {
+            this.calculate();
+            this.logs[$scope.hour] = {
+                avl: this.avl,
+                run: this.run,
+                idl: this.idl,
+                brk: this.brk,
+                avli: this.avli,
+                utli: this.utli
+            }
+        }
 
-            this.west_idl = this.west_avl - this.west_run;
-            this.west_brk = this.west_total - this.west_avl;
-            this.west_avali = Math.round(this.west_avl * 100 / this.west_total);
-            this.west_utl = Math.round(this.west_run * 100 / this.west_total);
+        change(command) {
+            if (command == 1 && this.avl > 0) {
+                this.avl--;
+            }
+            else if (command == 2 && this.avl < this.total) {
+                this.avl++;
+            }
+            else if (command == 3 && this.run > 0) {
+                this.run--;
+            }
+            else if (command == 4 && this.run < this.avl) {
+                this.run++;
+            }
+            this.log();
         }
     }
 
@@ -110,13 +134,13 @@ app.controller("myController", function ($scope, $http) {
             var k = new Machine(x, 'dragline');
             $scope.machines.push(k);
         })
-        angular.forEach($scope.siloNames, function (s, i) {
-            var k = new Silo(s)
+        angular.forEach($scope.siloNames, function (x, i) {
+            var k = new Silo(x)
             $scope.silos.push(k);
         })
-        $scope.dumper = new Dumper();
 
-
+        $scope.eastDumper = new Dumper('east', 30);
+        $scope.westDumper = new Dumper('west', 40);
         sync();
         setInterval(sync, 10000);
     }
@@ -128,10 +152,11 @@ app.controller("myController", function ($scope, $http) {
         var e = b + d * (8 * 3600 * 1000);
         $scope.start = e;
         $scope.min = Math.floor((c - e) / (5 * 60 * 1000));
-        console.log($scope.min);
+        $scope.hour = Math.floor($scope.min / 60);
 
 
-        if ($scope.changed || forceUpload) {
+
+        if ($scope.changed) {
             console.log('Uploading on status change...');
             upload();
         }
@@ -245,26 +270,28 @@ app.controller("myController", function ($scope, $http) {
         })
     }
     function performanceLog() {
+
+
         $scope.crusherTotal = {
-            idlmins:0,
-            runmins:0,
-            brkmins:0,
-            avlmins:0,
-            defmins:0
+            idlmins: 0,
+            runmins: 0,
+            brkmins: 0,
+            avlmins: 0,
+            defmins: 0
         };
         $scope.shovelTotal = {
-            idlmins:0,
-            runmins:0,
-            brkmins:0,
-            avlmins:0,
-            defmins:0
+            idlmins: 0,
+            runmins: 0,
+            brkmins: 0,
+            avlmins: 0,
+            defmins: 0
         };
         $scope.draglineTotal = {
-            idlmins:0,
-            runmins:0,
-            brkmins:0,
-            avlmins:0,
-            defmins:0
+            idlmins: 0,
+            runmins: 0,
+            brkmins: 0,
+            avlmins: 0,
+            defmins: 0
         };
 
         interpolate(); // Will ensure data validity and continuity before logging.
@@ -307,7 +334,7 @@ app.controller("myController", function ($scope, $http) {
 
 
             ////// TOTALING CALCULATIONS /////////
-      
+
 
             if (mach.type == 'crusher') {
                 $scope.crusherTotal.idlmins += mach.idlmins;
@@ -365,11 +392,14 @@ app.controller("myController", function ($scope, $http) {
                 $scope.draglineTotal.avlstr = `${$scope.draglineTotal.avl} %`;
                 $scope.draglineTotal.utlstr = `${$scope.draglineTotal.utl} %`;
             }
-            
-            console.log($scope.shovelTotal);
 
-           
-        })
+
+
+        });
+        
+   
+   
+   
     }
 
     $scope.login = function () {
@@ -387,45 +417,6 @@ app.controller("myController", function ($scope, $http) {
     }
 
 
-    $scope.dumperCounter = function (command) {
-        console.log(command);
-        if (command == 1) {
-            if ($scope.dumper.east_avl > 0)
-                $scope.dumper.east_avl--;
-        }
-        else if (command == 2) {
-            if ($scope.dumper.east_avl < $scope.dumper.east_total)
-                $scope.dumper.east_avl++;
-        }
-        else if (command == 3) {
-            if ($scope.dumper.east_run > 0)
-                $scope.dumper.east_run--;
-        }
-        else if (command == 4) {
-            if ($scope.dumper.east_run < $scope.dumper.east_avl)
-                $scope.dumper.east_run++;
-        }
-
-        else if (command == 5) {
-            if ($scope.dumper.west_avl > 0)
-                $scope.dumper.west_avl--;
-        }
-        else if (command == 6) {
-            if ($scope.dumper.west_avl < $scope.dumper.west_total)
-                $scope.dumper.west_avl++;
-        }
-        else if (command == 7) {
-            if ($scope.dumper.west_run > 0)
-                $scope.dumper.west_run--;
-        }
-        else if (command == 8) {
-            if ($scope.dumper.west_run < $scope.dumper.west_avl)
-                $scope.dumper.west_run++;
-        }
-
-
-
-    }
 
     function tohhmm(mins) {
         h = Math.floor(mins / 60);
