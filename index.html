@@ -31,7 +31,7 @@
       <img class="icon" src="media/favicon.svg" alt="">
       <p>DCH</p>
     </div>
-    
+
     <div class="menu">
       <a href="index.html">Live</a>
       <a href="shift.html">Shift</a>
@@ -136,7 +136,7 @@
         </div>
       </div>
 
-      <div class="card live-dumper">
+      <!-- <div class="card live-dumper">
         <p>EAST DUMPERS</p>
         <table>
           <tr>
@@ -150,6 +150,24 @@
             <td><button ng-click="dumperCounter(3)">-</button></td>
             <td class="dumper-counter">{{dumper.east_run}}</td>
             <td><button ng-click="dumperCounter(4)">+</button></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card live-dumper">
+        <p>EAST DUMPERS</p>
+        <table>
+          <tr>
+            <td>Avl</td>
+            <td> <button ng-click="eastDumper.change(1)">-</button></td>
+            <td class="dumper-counter">{{eastDumper.avl}}</td>
+            <td> <button ng-click="eastDumper.change(2)">-</button></td>
+          </tr>
+          <tr>
+            <td>Run</td>
+            <td> <button ng-click="eastDumper.change(3)">-</button></td>
+            <td class="dumper-counter">{{eastDumper.run}}</td>
+            <td> <button ng-click="eastDumper.change(4)">-</button></td>
           </tr>
         </table>
       </div>
@@ -170,7 +188,7 @@
             <td><button ng-click="dumperCounter(8)">+</button></td>
           </tr>
         </table>
-      </div>
+      </div> -->
 
 
 
@@ -190,7 +208,7 @@
     </div>
   </div>
 
-  <div class="table-section">
+  <div class="sec-table">
     <div class="shovel-perf-div">
       <table class="shovel-perf-table w3-table-all">
         <tr class="w3-green">
@@ -220,6 +238,72 @@
           <td>{{shovelTotal.brkhms}}</td>
           <td>{{shovelTotal.avlstr}}</td>
           <td>{{shovelTotal.utlstr}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="crusher-perf-div">
+      <table class="crusher-perf-table w3-table-all">
+        <tr class="w3-green">
+          <th>Crusher</th>
+          <th>Avl hrs</th>
+          <th>Idl hrs</th>
+          <th>Run hrs</th>
+          <th>Bdn hrs</th>
+          <th>% Avl</th>
+          <th>% Utl</th>
+        </tr>
+        <tr ng-repeat="s in machines" ng-hide="s.type!='crusher'">
+
+          <td>{{s.name}}</td>
+          <td>{{s.avlhms}}</td>
+          <td>{{s.idlhms}}</td>
+          <td>{{s.runhms}}</td>
+          <td>{{s.brkhms}}</td>
+          <td>{{s.avlstr}}</td>
+          <td>{{s.utlstr}}</td>
+        </tr>
+        <tr class="total w3-green">
+          <td>TOTAL</td>
+          <td>{{crusherTotal.avlhms}}</td>
+          <td>{{crusherTotal.idlhms}}</td>
+          <td>{{crusherTotal.runhms}}</td>
+          <td>{{crusherTotal.brkhms}}</td>
+          <td>{{crusherTotal.avlstr}}</td>
+          <td>{{crusherTotal.utlstr}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="dragline-perf-div">
+      <table class="dragline-perf-table w3-table-all">
+        <tr class="w3-green">
+          <th>Dragline</th>
+          <th>Avl hrs</th>
+          <th>Idl hrs</th>
+          <th>Run hrs</th>
+          <th>Bdn hrs</th>
+          <th>% Avl</th>
+          <th>% Utl</th>
+        </tr>
+        <tr ng-repeat="s in machines" ng-hide="s.type!='dragline'">
+
+          <td>{{s.name}}</td>
+          <td>{{s.avlhms}}</td>
+          <td>{{s.idlhms}}</td>
+          <td>{{s.runhms}}</td>
+          <td>{{s.brkhms}}</td>
+          <td>{{s.avlstr}}</td>
+          <td>{{s.utlstr}}</td>
+        </tr>
+        <tr class="total w3-green">
+          <td>TOTAL</td>
+          <td>{{draglineTotal.avlhms}}</td>
+          <td>{{draglineTotal.idlhms}}</td>
+          <td>{{draglineTotal.runhms}}</td>
+          <td>{{draglineTotal.brkhms}}</td>
+          <td>{{draglineTotal.avlstr}}</td>
+          <td>{{draglineTotal.utlstr}}</td>
         </tr>
       </table>
     </div>

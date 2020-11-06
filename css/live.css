@@ -156,7 +156,7 @@
 	}
 }
 
-/* \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
+/* TREND SECTION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
 
 .trend-section {
 	width: 100vw;
@@ -212,6 +212,19 @@
 	background: rgba(163, 163, 163, 0);
 }
 
+/* TABLE SECTION ///////////////////////////////////////////////// */
+.sec-table:{
+	width: 100vw;
+
+	display:flex;
+	justify-content: center;
+}
+.sec-table > div{
+	background: rgb(47, 47, 47);
+	padding: 20px;
+	
+}
+/* //////////////////////////////////////////////// */
 
 
 
